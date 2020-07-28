@@ -99,7 +99,7 @@ class Generator(object):
             return None
         self._base_urls[page.file.url] = base_url
         soup = BeautifulSoup(content, 'html.parser')
-        url = page.url.split('.')[0]
+        url = page.url[:-5] if page.url.endswith('.html') else page.url
         article = soup.find('article')
         if not article :
             article = self.html.new_tag('article')
@@ -210,7 +210,7 @@ class Generator(object):
         div = self.html.new_tag('div')
         menu = self.html.new_tag('div')
         h4 = self.html.new_tag('h4')
-        urlid = url.split('.')[0]
+        urlid = url[:-5] if url.endswith('.html') else url
         a = self.html.new_tag('a', href='#mkpdf-{}'.format(urlid))
         a.insert(0, p.title)
         h4.append(a)
