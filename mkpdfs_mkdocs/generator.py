@@ -137,12 +137,6 @@ class Generator(object):
             format(self.title, css_url), 'html5lib')
         self.html.head.insert(0, css_tag)
 
-    def get_path_to_pdf(self, start):
-        pdf_split = os.path.split(self.config['output_path'])
-        start_dir = os.path.split(start)[0]
-        return os.path.join(os.path.relpath(pdf_split[0],
-        start_dir), pdf_split[1])
-
     def add_tocs(self):
         title = self.html.new_tag('h1', id='doc-title')
         title.insert(0, self.config['toc_title'])
@@ -181,10 +175,7 @@ class Generator(object):
             self.add_tocs()
 
     def get_path_to_pdf(self, start):
-        pdf_split = os.path.split(self.config['output_path'])
-        start_dir = os.path.split(start)[0]
-        return os.path.join(os.path.relpath(pdf_split[0], start_dir),
-        pdf_split[1])
+        return os.path.relpath(self.config['output_path'], start)
 
     def _gen_toc_section(self, section):
         for p in section.children:
