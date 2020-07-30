@@ -151,12 +151,15 @@ html {
       height: 297mm;
       justify-content: flex-end;
       page: chapter;
-      h1.section_title{
+      .section_title{
         background-color: $bgColor;
         padding: 1cm;
         width: 60%;
         text-align: center;
         color: $bgTextColor;
+        font-size: 30pt;
+      }
+      h1.section_title{
         font-size: 30pt;
       }
     }
