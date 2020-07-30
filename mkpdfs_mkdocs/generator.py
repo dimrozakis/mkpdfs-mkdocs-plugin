@@ -10,7 +10,7 @@ from weasyprint.fonts import FontConfiguration
 
 from mkpdfs_mkdocs.utils import gen_address
 from mkpdfs_mkdocs.preprocessor import get_separate as prep_separate, get_combined as prep_combined
-from mkpdfs_mkdocs.preprocessor import increment_headings
+from mkpdfs_mkdocs.preprocessor import increment_headings, remove_header_links
 
 log = logging.getLogger(__name__)
 
@@ -114,7 +114,9 @@ class Generator(object):
             self.generate = False
             return None
         article = increment_headings(
-            prep_combined(article, base_url, page.file.url),
+            remove_header_links(
+                prep_combined(article, base_url, page.file.url),
+            ),
             self._page_nesting.get(page.file.url, 0),
         )
         span = soup.new_tag('span')
