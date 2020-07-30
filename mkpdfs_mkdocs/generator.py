@@ -10,6 +10,7 @@ from weasyprint.fonts import FontConfiguration
 
 from mkpdfs_mkdocs.utils import gen_address
 from mkpdfs_mkdocs.preprocessor import get_separate as prep_separate, get_combined as prep_combined
+from mkpdfs_mkdocs.preprocessor import increment_headings
 
 log = logging.getLogger(__name__)
 
@@ -24,6 +25,7 @@ class Generator(object):
         self.generate = True
         self._articles = {}
         self._page_order = []
+        self._page_nesting = {}
         self._base_urls = {}
         self._toc = None
         self.html = BeautifulSoup('<html><head></head>\
@@ -65,17 +67,18 @@ class Generator(object):
         for p in nav:
             self.addToOrder(p)
 
-    def addToOrder(self, page):
+    def addToOrder(self, page, level=1):
         if page.is_page and page.meta != None and 'pdf' in page.meta and page.meta['pdf'] == False:
             print(page.meta)
             exit(1)
             return;
         if page.is_page :
+            self._page_nesting[page.file.url] = level - 1
             self._page_order.append(page.file.url)
         else :
             uuid = str(uuid4())
             self._page_order.append(uuid)
-            title = self.html.new_tag('h1',
+            title = self.html.new_tag('h{}'.format(level),
                 id='{}-title'.format(uuid),
                 **{'class': 'section_title'}
             )
@@ -87,7 +90,7 @@ class Generator(object):
             article.append(title)
             self._articles[uuid] = article
             for child in page.children:
-                self.addToOrder(child)
+                self.addToOrder(child, level=level+1)
 
 
     def remove_from_order(self, item):
@@ -110,7 +113,10 @@ class Generator(object):
         if not article:
             self.generate = False
             return None
-        article = prep_combined(article, base_url, page.file.url)
+        article = increment_headings(
+            prep_combined(article, base_url, page.file.url),
+            self._page_nesting.get(page.file.url, 0),
+        )
         span = soup.new_tag('span')
         span['id'] = 'mkpdf-{}'.format(url)
         article.insert(0, span)

@@ -28,3 +28,16 @@ def get_separate(soup: BeautifulSoup, base_url: str):
 
     soup = replace_asset_hrefs(soup, base_url)
     return soup
+
+def increment_headings(soup: BeautifulSoup, inc: int):
+    if not inc:
+        return soup
+    assert isinstance(inc, int) and inc > 0
+    for i in range(6, 0, -1):
+        for h in soup.find_all('h{}'.format(i)):
+            if i + inc > 6:
+                print(h)
+                raise ValueError("Exceeded maximum heading level. Can't nest "
+                                 "h{} {} levels.".format(i, inc))
+            h.name = 'h{}'.format(i + inc)
+    return soup
