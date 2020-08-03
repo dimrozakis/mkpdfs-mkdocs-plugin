@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 from weasyprint.fonts import FontConfiguration
 
 from mkpdfs_mkdocs.generator import Generator
-from mkpdfs_mkdocs.utils import modify_html
+from mkpdfs_mkdocs.utils import modify_html, modify_html_material
 
 class Mkpdfs(BasePlugin):
 
@@ -26,6 +26,7 @@ class Mkpdfs(BasePlugin):
 
     def __init__(self):
         self.generator = Generator()
+        self.theme = ''
 
     def on_serve (self, server, config, **kwargs):
         # TODO: Implement watcher when the user is performing design
@@ -37,6 +38,7 @@ class Mkpdfs(BasePlugin):
     def on_config(self, config, **kwargs):
         self.config['output_path'] = os.path.join("pdf", "combined.pdf") if not self.config['output_path'] else self.config['output_path']
         self.generator.set_config(self.config, config)
+        self.theme = config['theme'].name
         return config
 
     def on_nav(self, nav, config, **kwargs):
@@ -55,8 +57,11 @@ class Mkpdfs(BasePlugin):
         filename = os.path.splitext(os.path.basename(src_path))[0]
         base_url = urls.path2url(os.path.join(path, filename))
         pdf_url = self.generator.add_article(output_content, page, base_url)
-        if pdf_url :
-            output_content = modify_html(output_content,pdf_url)
+        if pdf_url:
+            if self.theme == 'material':
+                output_content = modify_html_material(output_content, pdf_url)
+            else:
+                output_content = modify_html(output_content, pdf_url)
         return output_content
 
     def on_post_build(self, config):
