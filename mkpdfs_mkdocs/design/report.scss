@@ -5,6 +5,10 @@
 $bgColor: #2196f3;
 $bgTextColor: #fff;
 
+:root {
+  --bg-color: #{$bgColor};
+  --bg-text-color: #{$bgTextColor};
+}
 
 @font-face {
   font-family: Fira Sans;
@@ -45,16 +49,16 @@ $bgTextColor: #fff;
 
 @page {
   @top-left {
-    background: $bgColor;
+    background-color: var(--bg-color);
     content: counter(page);
     height: 1cm;
-    color: $bgTextColor;
+    color: var(--bg-text-color);
     text-align: center;
     width: 1cm;
   }
 
   @top-center {
-    background: $bgColor;
+    background-color: var(--bg-color);
     content: '';
     display: block;
     height: .05cm;
@@ -152,11 +156,11 @@ html {
       justify-content: flex-end;
       page: chapter;
       .section_title{
-        background-color: $bgColor;
+        background-color: var(--bg-color);
         padding: 1cm;
         width: 60%;
         text-align: center;
-        color: $bgTextColor;
+        color: var(--bg-text-color);
         font-size: 30pt;
       }
       h1.section_title{
@@ -165,7 +169,7 @@ html {
     }
   }
   article#doc-cover h1#doc-title {
-    color: $bgColor;
+    color: var(--bg-color);
     font-size: 38pt;
     margin: 5cm 2cm 0 2cm;
     page: no-chapter;
@@ -179,9 +183,9 @@ html {
     margin: 0;
     height: 297mm;
     address {
-      background: $bgColor;
+      background-color: var(--bg-color);
       flex: 1;
-      color: $bgTextColor;
+      color: var(--bg-text-color);
       margin: 0 -2cm;
       padding: 1cm 0;
       font-style: normal;
@@ -217,7 +221,7 @@ html {
 
 html body {
   h1 {
-    color: $bgColor;
+    color: var(--bg-color);
     string-set: heading content();
   }
   h2, h3, h4 {
@@ -253,7 +257,7 @@ h2, h3, h4, h5 {
 
 html body article {
   a {
-    color: $bgColor;
+    color: var(--bg-color);
     text-decoration: none;
     &.external-link::after {
       content: " (" attr(href) ")";
@@ -287,7 +291,7 @@ html body article {
       font-weight: 500;
       margin: 3em 0 1em;
       &::before {
-        background: $bgColor;
+        background-color: var(--bg-color);
         content: '';
         display: block;
         height: .08cm;
@@ -303,7 +307,7 @@ html body article {
         margin: .15cm 0;
         padding-top: .15cm;
         &::before {
-          color: $bgColor;
+          color: var(--bg-color);
           content: '• ';
           font-size: 40pt;
           line-height: 16pt;
@@ -320,7 +324,7 @@ html body article {
       padding-left: 0;
     }
     div h4 a::after, ul li a::after {
-      color: $bgColor;
+      color: var(--bg-color);
       content: target-counter(attr(href), page);
       float: right;
     }
