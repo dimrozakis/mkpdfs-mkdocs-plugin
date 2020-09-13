@@ -33,15 +33,17 @@ class Generator(object):
         'html.parser')
         self.dir = os.path.dirname(os.path.realpath(__file__))
         self.design = os.path.join(self.dir, 'design/report.css')
+        self.design_extra = ''
 
     def set_config(self, local, config):
         self.config = local;
-        if self.config['design']:
-            css_file = os.path.join(os.getcwd(), self.config['design'])
-            if not os.path.isfile(css_file) :
-                sys.exit('The file {} specified for design has not \
-                been found.'.format(css_file))
-            self.design = css_file
+        for key in ('design', 'design_extra'):
+            if self.config[key]:
+                css_file = os.path.join(os.getcwd(), self.config[key])
+                if not os.path.isfile(css_file) :
+                    sys.exit('The file {} specified for {} has not \
+                    been found.'.format(css_file, key))
+                setattr(self, key, css_file)
         self.title = config['site_name']
         self.config['copyright'] = 'CC-BY-SA\
         ' if not config['copyright'] else config['copyright']
@@ -131,10 +133,17 @@ class Generator(object):
     def add_css(self, font_config):
         css_url = urls.path2url(self.design)
         self.html.head.clear()
-        css_tag = BeautifulSoup(
-            '<title>{}</title><link rel="stylesheet" \
-            href="{}" type="text/css">'.
-            format(self.title, css_url), 'html5lib')
+        title_tag = '<title>{}</title>'.format(self.title)
+        css_tag_tmpl = '<link rel="stylesheet" href="{}" type="text/css">'
+        design_tag = css_tag_tmpl.format(css_url)
+        if self.design_extra:
+            design_extra_tag = css_tag_tmpl.format(
+                urls.path2url(self.design_extra)
+            )
+        else:
+            design_extra_tag = ''
+        css_tag = BeautifulSoup(title_tag + design_tag + design_extra_tag,
+                                'html5lib')
         self.html.head.insert(0, css_tag)
 
     def add_tocs(self):

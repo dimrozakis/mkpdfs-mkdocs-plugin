@@ -83,6 +83,36 @@ This plugin supports following options to allow you better handle the customisat
 | `toc_position` | The position of the table of contents. This option supports 3 differents values: `pre` to put the toc at the beginning of the file but after the cover (**the default value*), `post` to put it at the end of the file or `none` to not generate it at all. |
 | `output_path` | The file name of the generated PDF, relative to the `site_dir`. By default this location is set to `pdf/combined.pdf`|
 | `design` |  Relative to your `MkDocs repository`, this option is the location of the CSS file defining the layout of the generated PDF. If this option is not defined the default design will be used. Defining an non existing file will cause the build or serve failure. |
+| `design_extra` |  Relative to your `MkDocs repository`, this option is the location of a secondary CSS file customizing the layout of the generated PDF. Defining an non existing file will cause the build or serve failure. This CSS file can be used to override parts of the main CSS file (either the one defined by `design` or of the default design). |
+
+## Changing the colors, cover image and other CSS overrides
+
+The `design_extra` option can be used to pass a secondary CSS file to override parts of the primary CSS file (either the one defined by `design` or the default builtin design).
+
+Assumming you're happy with the default design but would like to change the basic colors and cover image:
+
+``` yaml
+plugins:
+    - mkpdfs:
+        # Path relative to directory containing mkdocs.yml
+        design_extra: pdf_overrides.css
+```
+
+And in a file named `pdf_overrides.css` put the following:
+
+``` css
+:root {
+    --bg-color: #ff0000;
+    --bg-text-color: #000000;
+}
+
+@page :first {
+    background-image: url(file:docs/pdf-cover.jpg);
+    background-size: auto;
+}
+```
+
+The path to the image must use the file protocol without the slashes so that it is resolved relative to the directory containing the `mkdocs.yml`.
 
 ## Contributing
 

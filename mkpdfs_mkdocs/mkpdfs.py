@@ -17,6 +17,7 @@ class Mkpdfs(BasePlugin):
 
     config_scheme = (
         ('design', config_options.Type(str, default=None)),
+        ('design_extra', config_options.Type(str, default=None)),
         ('toc_title', config_options.Type(str, default="Table of Contents")),
         ('company', config_options.Type(str, default=None)),
         ('author', config_options.Type(str, default=None)),

@@ -9,24 +9,26 @@ Lets say you mkdoc schema is as following:
 ```bash
 .
 ├── design
-│   └── style.css
+│   ├── style.css
+│   └── overrides.css
 ├── docs
 │   ├── index.md
 ├── mkdocs.yml
 ```
 
-You can customise your PDF layout design by passing a CSS file location to the parameter `design` like in the folowing example.
+You can customise your PDF layout design by passing a CSS file location to the parameter `design` and/or `design_extra` like in the folowing example.
 
 ```yaml
 plugins:
     - search
     - mkpdfs:
         design: design/style.css
+        design_extra: design/overrides.css
 
 ```
 
 !!! note Note
-    Currently the plugin only supports the use of one file.
+    Currently the plugin only supports the use of one primary and one secondary file.
 
 The provided file location, must be relative to your MkDocs project folder.
 
