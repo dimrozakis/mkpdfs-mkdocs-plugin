@@ -57,7 +57,7 @@ class Generator(object):
             return
         self.gen_articles()
         font_config = FontConfiguration()
-        css = self.add_css(font_config);
+        self.add_head()
         pdf_path = os.path.join(self.mkdconfig['site_dir'],
         self.config['output_path'])
         os.makedirs(os.path.dirname(pdf_path), exist_ok=True)
@@ -134,21 +134,21 @@ class Generator(object):
         self._articles[page.file.url] = article
         return self.get_path_to_pdf(page.file.dest_path)
 
-    def add_css(self, font_config):
-        css_url = urls.path2url(self.design)
+    def add_head(self):
+        lines = ['<title>{}</title>'.format(self.title)]
+        for key, val in (
+            ("author", self.config['author'] or self.mkdconfig['site_author']),
+            ("description", self.mkdconfig['site_description']),
+        ):
+            if val:
+                lines.append('<meta name="{}" content="{}">'.format(key, val))
+        for css in (self.design, self.design_extra):
+            if css:
+                css_tmpl = '<link rel="stylesheet" href="{}" type="text/css">'
+                lines.append(css_tmpl.format(urls.path2url(css)))
+        head = BeautifulSoup('\n'.join(lines), 'html5lib')
         self.html.head.clear()
-        title_tag = '<title>{}</title>'.format(self.title)
-        css_tag_tmpl = '<link rel="stylesheet" href="{}" type="text/css">'
-        design_tag = css_tag_tmpl.format(css_url)
-        if self.design_extra:
-            design_extra_tag = css_tag_tmpl.format(
-                urls.path2url(self.design_extra)
-            )
-        else:
-            design_extra_tag = ''
-        css_tag = BeautifulSoup(title_tag + design_tag + design_extra_tag,
-                                'html5lib')
-        self.html.head.insert(0, css_tag)
+        self.html.head.insert(0, head)
 
     def add_tocs(self):
         title = self.html.new_tag('h1', id='doc-title')
