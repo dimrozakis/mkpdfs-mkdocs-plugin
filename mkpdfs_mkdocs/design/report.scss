@@ -4,10 +4,12 @@
 
 $bgColor: #2196f3;
 $bgTextColor: #fff;
+$lightTextColor: #707070;
 
 :root {
   --bg-color: #{$bgColor};
   --bg-text-color: #{$bgTextColor};
+  --light-text-color: #{$lightTextColor};
 }
 
 @font-face {
@@ -339,5 +341,12 @@ html body article {
   }
   p {
     text-align: justify;
+  }
+  blockquote {
+    margin-left: .2cm;
+    padding-left: .2cm;
+    color: var(--light-text-color);
+    border-left: .1cm solid;
+    border-color: var(--light-text-color);
   }
 }
