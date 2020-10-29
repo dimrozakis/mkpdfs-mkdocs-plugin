@@ -188,7 +188,8 @@ class Generator(object):
             self.add_tocs()
 
     def get_path_to_pdf(self, start):
-        return os.path.relpath(self.config['output_path'], start)
+        return os.path.relpath(self.config['output_path'],
+                               os.path.dirname(start))
 
     def _gen_toc_section(self, section):
         for p in section.children:
